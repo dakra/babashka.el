@@ -83,7 +83,10 @@ When NIL it uses the path that contains the =bb.edn= file."
 
 (defun babashka-tasks-list ()
   "Return a list of tasks defined in =bb.edn=."
-  (hash-table-keys (gethash :tasks (babashka--read-project-file))))
+  (thread-last (babashka--read-project-file)
+               (gethash :tasks)
+               hash-table-keys
+               (delete :requires)))
 
 (defun babashka--read-task ()
   "Prompt user for a task."
