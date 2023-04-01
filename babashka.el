@@ -100,16 +100,19 @@ When NIL it uses the path that contains the =bb.edn= file."
 ;;; Public functions
 
 ;;;###autoload
-(defun babashka-tasks-run (task args &optional comint)
+(defun babashka-tasks-run (task &optional args comint)
   "Run a babashka TASK with command line ARGS.
-If optional third arg COMINT is t, or if the command was invoked
-with a prefix argument, the buffer will be in Comint mode with
-`compilation-shell-minor-mode'."
+If called with a prefix argument, read ARGS from minibuffer.  If
+optional third arg COMINT is t, or if the command was invoked
+with 2 prefix arguments (C-u C-u), the buffer will be in Comint
+mode with `compilation-shell-minor-mode'."
   (interactive
    (list
     (babashka--read-task)
-    (read-from-minibuffer "Task arguments: ")
-    (consp current-prefix-arg)))
+    (if current-prefix-arg
+        (read-from-minibuffer "Task arguments: ")
+      "")
+    (consp (equal current-prefix-arg '(16)))))
   (let ((default-directory (babashka--project-root))
         (cmd (concat "bb " (shell-quote-argument task) " " args)))
     (compilation-start cmd comint (lambda (_mode) (format "*babashka task: %s*" task)))))
