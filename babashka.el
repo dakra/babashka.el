@@ -28,7 +28,7 @@
 
 ;;; Commentary:
 ;;
-;; `babashka.el' provides utilities for working with the babashka.
+;; `babashka.el' provides utilities for working with babashka.
 
 ;;; Code:
 
@@ -57,7 +57,8 @@
 When NIL it uses the path that contains the =bb.edn= file."
   :type 'directory
   :safe #'directory-name-p)
-;;;###autoload(put 'babashka-project-root 'safe-local-variable #'directory-name-p)
+;;;###autoload
+(put 'babashka-project-root 'safe-local-variable #'directory-name-p)
 
 
 ;;; Variables
@@ -74,7 +75,7 @@ When NIL it uses the path that contains the =bb.edn= file."
       (locate-dominating-file default-directory "bb.edn")))
 
 (defun babashka--read-project-file ()
-  "Return filename of =bb.edn=."
+  "Return parsed file content of =bb.edn=."
   (let* ((bb.edn (expand-file-name "bb.edn" (babashka--project-root)))
          (content (with-temp-buffer
                     (insert-file-contents bb.edn)
@@ -86,6 +87,7 @@ When NIL it uses the path that contains the =bb.edn= file."
   (thread-last (babashka--read-project-file)
                (gethash :tasks)
                hash-table-keys
+               (delete :init)
                (delete :requires)))
 
 (defun babashka--read-task ()
