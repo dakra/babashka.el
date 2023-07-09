@@ -114,7 +114,7 @@ mode with `compilation-shell-minor-mode'."
     (if current-prefix-arg
         (read-from-minibuffer "Task arguments: ")
       "")
-    (consp (equal current-prefix-arg '(16)))))
+    (equal current-prefix-arg '(16))))
   (let ((default-directory (babashka--project-root))
         (cmd (concat "bb " (shell-quote-argument task) " " args)))
     (compilation-start cmd comint (lambda (_mode) (format "*babashka task: %s*" task)))))
